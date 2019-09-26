@@ -1,44 +1,34 @@
 /*
-
-by Clement Mihailescu & Hussein Farah
-
----------- Oak Programming Language ----------
+---------- KPL Programming Language ----------
 ----------------------------------------------
-------------- Overview & Grammar -------------
+Based on Oak Programming Language build by Clement Mihailescu & Hussein Farah
 
-Oak is a small language that Clement and Hussein built over the course of a four-day hackathon.
+------------- Overview & Grammar -------------
+Kpl is a small language that Clement and Hussein built over the course of a four-day hackathon.
 It supports various fundamental programming concepts such as variable-declaration, 
 function calling, conditional statements, loops, proper order of operations, and recursion. 
 The language syntax is meant to be very readable and intuitive: for instance, every 
 function body, conditional statement body, and loop body is wrapped in colons; loops 
-follow a "from [startingNumber] to [endingNumber] with [variable]" syntax; and variable types are
+follow a "naduh [startingNumber] haduh [endingNumber] da [variable]" syntax; and variable types are
 specified upon declaration. Below is the language's EBNF-based grammar, and following that is the code
 for the actual interpreter. Starting on line 731 are some examples of programs that the language can run. 
 Uncommenting them one by one and pressing the "Run" button above will execute each program, respectively.
-
 -----------------------
 --------GRAMMAR--------
 -----------------------
-
 program::= variable-declaration | conditional | loop | expression [ program ]
-
 variable-declaration::= variable-keyword variable-name assignment-operator variable-body
 variable-keyword::= "fn" | "num" | "str" | "arr" | "bool"
 variable-name::= identifier
 assignment-operator::= "="
 variable-body::= function-declaration | expression | comparison
-
 function-declaration::= function-arguments wrapper function-body wrapper
 function-arguments::= "(" [ { expression "," } ] ")"
 function-body::= program
-
-conditional::= "if" comparison wrapper program wrapper [ { "else if" ... } | "else" wrapper program wrapper ]
-
+conditional::= "lada" comparison wrapper program wrapper [ { "else if" ... } | "hynrei" wrapper program wrapper ]
 comparison::= expression [ comparison-operator expression ]
 comparison-operator::= "=="
-
-loop::= "from" expression "to" expression "with" identifier wrapper program wrapper
-
+loop::= "naduh" expression "to" expression "with" identifier wrapper program wrapper
 expression::= term { "+" | "-" term }
 term::= factor { "*" | "/" | "%" factor }
 factor::= number | string | boolean | array | identifier | "-" factor | "(" expression ")" | function-call
@@ -48,25 +38,21 @@ number::= { digit } [ "." { digit } ]
 string::= """ [ { * } ] """
 array::= "[" [ { expression "," } ] "]" 
 boolean::= "true" | "false"
-
 letter::= "a" | "b" | ... | "y" | "z" | "A" | "B" | ... | "Y" | "Z"
 digit::= "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
-
 wrapper::= ":"
-
----------- Oak Programming Language ----------
+---------- KPL Programming Language ----------
 ----------------------------------------------
 ---------------- Examples --------------------
-
 */
 
 // MEMORY SET-UP WITH SOME NATIVE FUNCTIONS
 
 let memory = {   
-		print: {
+		shon: {
 			isNative: true,
 			type: 'fn',
-			name:'print',
+			name:'shon',
 			params: [],
 			body: (params) => {
 				let arrToPrint = [];
@@ -133,7 +119,7 @@ Interpreter.prototype.tokenize = function(text) {
     return text.split(regex).filter(function (s) { return !s.match(/^\s*$/); });
 };
 
-Interpreter.prototype.main = function(text) {
+Interpreter.prototype.prokram = function(text) {
 	this.tokens = this.tokenize(text);
   	if (!this.tokens.length) {
     	return "";
@@ -177,7 +163,7 @@ Interpreter.prototype.consumeAndRunUntilBreak = function() {
 	let returnValue = [];
 	while (!this.isWrapper() && this.tokens.length) returnValue.push(this.get());
 	let newInterpreter = new Interpreter(this.memory);
-	return newInterpreter.main(returnValue.join(" "));
+	return newInterpreter.prokram(returnValue.join(" "));
 };
 
 Interpreter.prototype.consumeUntilFunctionWrapper = function(char, returnType) {
@@ -189,8 +175,8 @@ Interpreter.prototype.consumeUntilFunctionWrapper = function(char, returnType) {
 			break;
 		case "array":
 			returnValue = [];
-			let conditionalKeywords = ["if", "elsif", "else"],
-				isLoopKeywords = ["from"],
+			let conditionalKeywords = ["lada", "badlada", "hynrei"],
+				isLoopKeywords = ["naduh"],
 				wrapperCounter = 0,
 				conditionalKeywordCounter = 0,
 				testCounter = 0;
@@ -224,8 +210,8 @@ Interpreter.prototype.consumeUntil = function(char, returnType) {
 			break;
 		case "array":
 			returnValue = [];
-			let conditionalKeywords = ["if", "elsif", "else"],
-				isLoopKeywords = ["from"],
+			let conditionalKeywords = ["lada", "badlada", "hynrei"],
+				isLoopKeywords = ["naduh"],
 				wrapperCounter = 0,
 				conditionalKeywordCounter = 0,
 				testCounter = 0;
@@ -297,11 +283,11 @@ Interpreter.prototype.isVariableKeyword = function() {
 };
 
 Interpreter.prototype.isConditionalKeyword = function() {
-	return ["if", "elsif", "else"].includes(this.peek());
+	return ["lada", "badlada", "hynrei"].includes(this.peek());
 };
 
 Interpreter.prototype.isLoopKeyword = function() {
-	return ["from"].includes(this.peek());
+	return ["naduh"].includes(this.peek());
 };
 
 Interpreter.prototype.getConditionalKeyword = function() {
@@ -411,7 +397,7 @@ Interpreter.prototype.functionCall = function(currentFunction) {
 			}
 			else if (this.getVariable(funcName)) {
 				let newInterpreter = new Interpreter(this.memory);
-				currentFunction.params.push(newInterpreter.main(currentArguments[i]));
+				currentFunction.params.push(newInterpreter.prokram(currentArguments[i]));
 			}
 			else {
 				currentFunction.params.push(currentArguments[i]);
@@ -429,7 +415,7 @@ Interpreter.prototype.functionCall = function(currentFunction) {
 		if (this.getVariable(currentArguments[j]) && this.getVariable(currentArguments[j]).type === "fn") {
 			currentArgument = currentArguments[j];
 		} else {
-			currentArgument = otherInterpreter.main(currentArguments[j]) || currentArguments[j];
+			currentArgument = otherInterpreter.prokram(currentArguments[j]) || currentArguments[j];
 		}
 		let parameterToReplace = currentFunction.params[j].name;
 		switch(currentFunction.params[j].type) {
@@ -459,7 +445,7 @@ Interpreter.prototype.functionCall = function(currentFunction) {
 			}
 		});
 	}
-	return otherInterpreter.main(bodyToParse.join(" "));
+	return otherInterpreter.prokram(bodyToParse.join(" "));
 };
 
 Interpreter.prototype.factor = function() {
@@ -619,7 +605,7 @@ Interpreter.prototype.variableDeclaration = function() {
 };
 
 Interpreter.prototype.conditional = function() {
-	if (this.getConditionalKeyword() !== "if") {
+	if (this.getConditionalKeyword() !== "lada") {
 		this.consumeUntil(":", "array");
 	} else {
 		this.get();
@@ -631,7 +617,7 @@ Interpreter.prototype.conditional = function() {
 			if (!this.isWrapper()) throw new Error("A conditional statement requires a closing wrapper!");
 			this.get();
 			if (this.isConditionalKeyword()) {
-				if (this.getConditionalKeyword() === "else") {
+				if (this.getConditionalKeyword() === "hynrei") {
 					this.get();
 					if (!this.isWrapper()) throw new Error("A conditional statement requires an opening wrapper!");
 					this.get();
@@ -643,7 +629,7 @@ Interpreter.prototype.conditional = function() {
 					if (!this.isWrapper()) throw new Error("A conditional statement requires a closing wrapper!");
 					this.get();
 					break;
-				} else if (this.getConditionalKeyword() === "elsif") {
+				} else if (this.getConditionalKeyword() === "badlada") {
 					this.get();
 					condition = this.comparison();
 				} else {
@@ -670,19 +656,19 @@ Interpreter.prototype.conditional = function() {
 
 Interpreter.prototype.loop = function() {
 	let firstIndex, finalIndex, variableName, loopBody;
-	if (this.peek() === 'from') {
+	if (this.peek() === 'naduh') {
 		this.get();
-		if (isNaN(this.peek())) throw new Error('A from loop should be followed by a number!');
+		if (isNaN(this.peek())) throw new Error('naduh loop dei ban sdang da u number!');
 		firstIndex = this.get();
-		if (this.peek() !== 'to') throw new Error('A from loop should always include the "to" keyword!');
+		if (this.peek() !== 'haduh') throw new Error('naduh loop dei beit ban don u "haduh" keyword!');
 		this.get();
-		if (isNaN(parseInt(this.peek()))) throw new Error('The "to" keyword should always be followed by a number!');
+		if (isNaN(parseInt(this.peek()))) throw new Error('U "haduh" keyword dei ban bud da u number!');
 		finalIndex = this.get();
-		if (this.peek() !== 'with') throw new Error('A from loop should always include the "with" keyword!');
+		if (this.peek() !== 'da') throw new Error('U naduh loop dei ban don u "da" keyword!');
 		this.get();
-		if (!this.isLetter()) throw new Error('The "with" keyword should always be followed by a proper identifier!');
+		if (!this.isLetter()) throw new Error('U "da" keyword dei ban bud da u "identifier" ba dei!');
 		variableName = this.get();
-		if (!this.isWrapper()) throw new Error('A from loop should always have a proper wrapper!');
+		if (!this.isWrapper()) throw new Error('U naduh loop dei ban pynkut bha!');
 		this.get();
 		loopBody = this.consumeUntil(':', 'array');
 		let children = [];
@@ -699,12 +685,12 @@ Interpreter.prototype.loop = function() {
 		}
 		children.forEach(e => {
 			let otherInterpreter = new Interpreter(this.memory);
-			otherInterpreter.main(e.join(" "));
+			otherInterpreter.prokram(e.join(" "));
 		});
 	} else if (this.peek() === 'while') {
 		
 	} else {
-		throw new Error('Invalid loop type!');
+		throw new Error('Phi bakla ka loop type!');
 	}
 };
 
@@ -729,19 +715,17 @@ Interpreter.prototype.program = function() {
 
 // INTERPRETER INSTANTIATION
 
-let Oak = new Interpreter(memory)
+let Kpl = new Interpreter(memory)
 
 // BASIC VARIABLE DECLARATION
-// Running "Oak.memory" will show that the newly-declared
+// Running "Kpl.memory" will show that the newly-declared
 // variables are stored in memory.
 
-Oak.main(`
-
+Kpl.prokram(`
 	num one = 1
 	num three = 3
 	str hello = "hello"
 	arr array = [1, 2, 3, 4, 5, 6, 7]
-
 	fn add = (num a, num b) :
 		=> a + b
 	:
@@ -751,48 +735,46 @@ Oak.main(`
 	
 `)
 
- //Oak.memory
+ //Kpl.memory
 
 // BASIC FUNCTION CALLING
 
- Oak.main(`
+ Kpl.prokram(`
  	add(one, three))
+ `)
+ 
+
+// BASIC lada / hynrei STATEMENTS 
+/*
+ Kpl.prokram(`
+ 	lada 3 == 2 :
+ 		shon("First!")
+ 	: badlada 1 == 2 :
+    	shon("Second!")
+  : hynrei :
+ 		shon("Third!")
+ 	:
+ `)*/
+
+// BASIC naduh haduh LOOPS
+
+ Kpl.prokram(`
+
+ 	naduh 0 haduh 6 da i :
+ 		num currentIndexValue = index(array, i)
+ 		shon(currentIndexValue)
+ 	:
 
  `)
 
-// BASIC IF / ELSE STATEMENTS 
+// NESTED naduh TO LOOPS
 
-// Oak.main(`
+// Kpl.prokram(`
 
-// 	if 3 == 3 :
-// 		print("First!")
-// 	: elsif echo(one) == 1 :
-// 		print("Second!")
-// 	: else :
-// 		print("Third!")
-// 	:
-
-// `)
-
-// BASIC FROM TO LOOPS
-
-// Oak.main(`
-
-// 	from 0 to 6 with i :
-// 		num currentIndexValue = index(array, i)
-// 		print(currentIndexValue)
-// 	:
-
-// `)
-
-// NESTED FROM TO LOOPS
-
-// Oak.main(`
-
-// 	from 1 to 3 with i :
-// 		from 1 to 3 with j :
-// 			from 1 to 3 with k :
-// 				print(i, j, k)
+// 	naduh 1 to 3 with i :
+// 		naduh 1 to 3 with j :
+// 			naduh 1 to 3 with k :
+// 				shon(i, j, k)
 // 			:
 // 		:
 // 	:
@@ -801,25 +783,25 @@ Oak.main(`
 
 // FIZZBUZZ
 
-// Oak.main(`
+// Kpl.prokram(`
 
 // 	fn fizzBuzz = (num n) :
-// 		from 1 to n with i :
-// 			if i % 15 == 0 :
-// 				print("FizzBuzz")
-// 			: elsif i % 5 == 0 :
-// 				print("Buzz")
-// 			: elsif i % 3 == 0 :
-// 				print("Fizz")
+// 		naduh 1 to n with i :
+// 			lada i % 15 == 0 :
+// 				shon("FizzBuzz")
+// 			: badlada i % 5 == 0 :
+// 				shon("Buzz")
+// 			: badlada i % 3 == 0 :
+// 				shon("Fizz")
 // 			: else :
-// 				print(i)
+// 				shon(i)
 // 			:
 // 		:
 // 	:
 
 // `)
 
-// Oak.main(`
+// Kpl.prokram(`
 
 // 	fizzBuzz(35)
 
@@ -827,31 +809,31 @@ Oak.main(`
 
 // RECURSION & FIBONACCI
 
-// Oak.main(`
+// Kpl.prokram(`
 
 // 	fn fib = (num n) :
-// 		if n == 1 :
+// 		lada n == 1 :
 // 			=> 0
-// 		: elsif n == 2 :
+// 		: badlada n == 2 :
 // 			=> 1
-// 		: else :
+// 		: hynrei :
 // 			=> fib(n - 1) + fib(n - 2)
 // 		:
 // 	:
 
 // `)
 
-// Oak.main(`
+// Kpl.prokram(`
 
-// 	from 1 to 15 with i :
-// 		print(i, fib(i))
+// 	naduh 1 to 15 with i :
+// 		shon(i, fib(i))
 // 	:
 
 // `)
 
 // ORDER OF OPERATIONS
 
-// Oak.main(`
+// Kpl.prokram(`
 
 // 	fn alwaysTwo = (num n) :
 // 		=> ((((n + 47 % (19 * add(-3, 5))) * echo(three - one) - 4) / fib(4) - n + fib(echo(10)) - 29) * 3 - 9) / 3 - (((n + 109 % 10) * 2 - 4) / 2 - n)
@@ -859,7 +841,7 @@ Oak.main(`
 
 // `)
 
-// Oak.main(`
+// Kpl.prokram(`
 
 // 	alwaysTwo(4751)
 
