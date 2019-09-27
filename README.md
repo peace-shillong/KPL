@@ -6,16 +6,17 @@ KPL is a basic programming language for educational purpose, based on the [Oak P
 
 _**English - Khasi**_
 
-print - shon
+_**The print function**_
+
+* print - shon
 
 _**conditional statements**_
 
-if - lada
-else - hynrei
-else if - badlada
+* if - lada
+* else - hynrei
+* else if - hynreilada
 
 _**Loops**_
 
-from 1 to 5 with i
-
-naduh 1 haduh 5 da i
+* from 1 to 5 with i
+* naduh 1 haduh 5 da i
