@@ -20,3 +20,11 @@ _**Loops**_
 
 * from 1 to 5 with i
 * naduh 1 haduh 5 da i
+
+## Write and Run Programs online
+
+[https://repl.it/@PeaceBeWithYou/Khasi-Programming-Language-KPL](Wrtie and Run Online) 
+
+You can start Programmin in Khasi from Line # 725
+
+Sample Programs are also Available for Testing
