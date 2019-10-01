@@ -23,7 +23,7 @@ _**Loops**_
 
 ## Write and Run Programs online
 
-[https://repl.it/@PeaceBeWithYou/Khasi-Programming-Language-KPL](Wrtie and Run Online) 
+Click here to [Write and Run Khasi Code Online](https://repl.it/@PeaceBeWithYou/Khasi-Programming-Language-KPL) 
 
 You can start Programmin in Khasi from Line # 725
 
